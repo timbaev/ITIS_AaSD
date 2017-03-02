@@ -12,14 +12,14 @@ import java.util.Iterator;
 public class Main {
 
     public static void main(String[] args) {
-        ArrayMap map = new ArrayMap();
+        ArrayMap<String, Integer> map = new ArrayMap<>();
 
         for (int i = 0; i < 5; i++) {
             map.add("Number " + i, i);
         }
 
         map.remove("Number 3");
-        int number = (Integer) map.get("Number 2");
+        int number = map.get("Number 2");
         map.set("Number 1", 10);
         String[] keys = map.getKeyes();
         Object[] values = map.getValues();

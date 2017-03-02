@@ -9,10 +9,10 @@ import java.util.ArrayList;
  * Created by Timbaev on 16.02.2017.
  * ArrayMap
  */
-public class ArrayMap implements Map {
+public class ArrayMap<K, V> implements Map<K, V> {
 
-    private ArrayList<String> keys;
-    private ArrayList<Object> values;
+    private ArrayList<K> keys;
+    private ArrayList<V> values;
 
     public ArrayMap() {
         keys = new ArrayList<>();
@@ -25,14 +25,14 @@ public class ArrayMap implements Map {
     }
 
     @Override
-    public void add(String key, Object value) {
+    public void add(K key, V value) {
         checkKey(key);
         keys.add(key);
         values.add(value);
     }
 
     @Override
-    public void remove(String key) {
+    public void remove(K key) {
         int keyNumber = keys.indexOf(key);
         if (keyNumber != -1) {
             keys.remove(keyNumber);
@@ -43,13 +43,13 @@ public class ArrayMap implements Map {
     }
 
     @Override
-    public Object get(String key) {
+    public V get(K key) {
         int keyNumber = foundkey(key);
         return values.get(keyNumber);
     }
 
     @Override
-    public void set(String key, Object value) {
+    public void set(K key, V value) {
         int keyNumber = foundkey(key);
         values.set(keyNumber, value);
     }
@@ -61,13 +61,13 @@ public class ArrayMap implements Map {
     }
 
     @Override
-    public String[] getKeyes() {
-        return keys.toArray(new String[keys.size()]);
+    public K[] getKeyes() {
+        return (K[]) keys.toArray(new String[keys.size()]);
     }
 
     @Override
-    public Object[] getValues() {
-        return values.toArray(new Object[values.size()]);
+    public V[] getValues() {
+        return (V[]) values.toArray(new Object[values.size()]);
     }
 
     @Override
@@ -75,11 +75,11 @@ public class ArrayMap implements Map {
         return keys.size();
     }
 
-    private void checkKey(String key) {
+    private void checkKey(K key) {
         if (keys.contains(key)) throw new KeyAlreadyExistsException("Error..key already exists");
     }
 
-    private int foundkey(String key) {
+    private int foundkey(K key) {
         int keyNumber = keys.indexOf(key);
         if (keyNumber == -1) throw new KeyNotFoundException("Error..key not found");
         return keyNumber;
