@@ -5,12 +5,13 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Created by Timbaev on 02.03.2017.
- * Linked list
+ * Created by Timbaev on 15.03.2017.
+ * Doubly Linked List
  */
-public class MyLinkedList<T> extends AbstractCollection<T> {
+public class MyDoublyLinkedList<T> extends AbstractCollection<T> {
 
     private Entry<T> head;
+    private Entry<T> tail;
 
     public boolean add(T object) {
         if (head == null) {
@@ -22,56 +23,46 @@ public class MyLinkedList<T> extends AbstractCollection<T> {
                 lastEntry = lastEntry.next;
             }
             lastEntry.next = new Entry<>(object);
+            tail = lastEntry.next;
+            tail.previous = lastEntry;
             return true;
         }
     }
 
     public void addAfter(T object, T afterObject) {
-        Entry<T> objectEnrty = head;
-        while (objectEnrty != null) {
-            if (objectEnrty.data.equals(afterObject)) {
-                if (objectEnrty.next != null) {
-                    Entry<T> tempNext = objectEnrty.next;
-                    objectEnrty.next = new Entry<>(object);
-                    objectEnrty.next.next = tempNext;
-                    break;
-                } else {
-                    objectEnrty.next = new Entry<>(object);
-                    break;
-                }
-            }
-            if (objectEnrty.next != null) {
-                objectEnrty = objectEnrty.next;
+        Entry<T> objectEntry = getEntryWithObject(afterObject);
+        if (objectEntry != null) {
+            Entry<T> insertEntry = new Entry<>(object);
+            if (objectEntry.next != null) {
+                Entry<T> tempNext = objectEntry.next;
+                objectEntry.next = insertEntry;
+                insertEntry.next = tempNext;
+                tempNext.previous = insertEntry;
             } else {
-                throw new NoSuchElementException();
+                tail = insertEntry;
+                objectEntry.next = tail;
+                tail.previous = objectEntry;
             }
         }
     }
 
     public boolean remove(Object obj) {
         T object = (T) obj;
-        Entry<T> objectEntry = head;
-        Entry<T> previousEntry = null;
-        while (objectEntry != null) {
-            if (objectEntry.data.equals(object)) {
-                if (previousEntry != null) {
-                    if (objectEntry.next != null) {
-                        previousEntry.next = objectEntry.next;
-                        return true;
-                    } else {
-                        previousEntry.next = null;
-                        return true;
-                    }
-                } else {
-                    head = objectEntry.next;
-                    return true;
-                }
+        Entry<T> objectEntry = getEntryWithObject(object);
+        if (objectEntry != null) {
+            if (objectEntry.next != null && objectEntry.previous != null) {
+                objectEntry.previous.next = objectEntry.next;
+                return true;
             }
-            if (objectEntry.next != null) {
-                previousEntry = objectEntry;
-                objectEntry = objectEntry.next;
-            } else {
-                return false;
+            if (objectEntry.equals(head)) {
+                head = objectEntry.next;
+                head.previous = null;
+                return true;
+            }
+            if (objectEntry.equals(tail)) {
+                tail = objectEntry.previous;
+                tail.next = null;
+                return true;
             }
         }
         return false;
@@ -87,31 +78,41 @@ public class MyLinkedList<T> extends AbstractCollection<T> {
     }
 
     public boolean has(T object) {
-        Entry<T> objectEntry = head;
-        while (objectEntry != null) {
-            if (objectEntry.data.equals(object)) {
-                return true;
-            }
-            if (objectEntry.next != null) {
-                objectEntry = objectEntry.next;
-            } else {
-                return false;
-            }
+        try {
+            getEntryWithObject(object);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
         }
-        return false;
     }
 
-    public void merge(MyLinkedList<T> linkedList) {
+    public void merge(MyDoublyLinkedList<T> linkedList) {
         Entry<T> lastEntry = head;
         while (lastEntry.next != null) {
             lastEntry = lastEntry.next;
         }
         lastEntry.next = linkedList.head;
+        linkedList.tail = lastEntry;
+    }
+
+    private Entry<T> getEntryWithObject(T object) {
+        Entry<T> objectEntry = head;
+        while (objectEntry != null) {
+            if (objectEntry.data.equals(object)) {
+                return objectEntry;
+            }
+            if (objectEntry.next != null) {
+                objectEntry = objectEntry.next;
+            } else {
+                throw new NoSuchElementException("Element not found");
+            }
+        }
+        return null;
     }
 
     @Override
     public Iterator<T> iterator() {
-        return new MyLinkedListIterator();
+        return new MyDoublyLinkedListIterator();
     }
 
     @Override
@@ -125,10 +126,10 @@ public class MyLinkedList<T> extends AbstractCollection<T> {
         return count;
     }
 
-    private class MyLinkedListIterator implements Iterator<T> {
+    private class MyDoublyLinkedListIterator implements Iterator<T> {
         private Entry<T> currentEntry;
 
-        public MyLinkedListIterator() {
+        public MyDoublyLinkedListIterator() {
             currentEntry = head;
         }
 
@@ -147,6 +148,7 @@ public class MyLinkedList<T> extends AbstractCollection<T> {
 
     private class Entry<T> {
         private Entry<T> next;
+        private Entry<T> previous;
         private T data;
 
         public Entry(T data) {
