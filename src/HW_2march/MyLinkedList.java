@@ -2,6 +2,7 @@ package HW_2march;
 
 import java.util.AbstractCollection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Created by Timbaev on 02.03.2017.
@@ -11,113 +12,139 @@ public class MyLinkedList<T> extends AbstractCollection<T> {
 
     private Entry<T> head;
 
-    public boolean add(T data) {
+    public boolean add(T object) {
         if (head == null) {
-            head = new Entry<>(data);
+            head = new Entry<>(object);
             return true;
         } else {
-            head.setNext(new Entry<>(data));
+            Entry<T> lastEntry = head;
+            while (lastEntry.next != null) {
+                lastEntry = lastEntry.next;
+            }
+            lastEntry.next = new Entry<>(object);
             return true;
         }
     }
 
-    public boolean addAfter(T data, T afterData) {
-        Entry<T> currentEntry = head;
-        while (currentEntry.hasNext() || currentEntry == head) {
-            if (currentEntry.getData().equals(afterData)) {
-                Entry<T> tempEntry = currentEntry.getNext();
-                currentEntry.setNext(new Entry<>(data));
-                currentEntry.getNext().setNext(tempEntry);
-                return true;
-            }
-            currentEntry = currentEntry.getNext();
-        }
-        return false;
-    }
-
-    public boolean remove(Object data) {
-        T tData = (T) data;
-        Entry<T> currentEntry = head;
-        Entry<T> previousEntry = null;
-        while (currentEntry.hasNext() || currentEntry == head) {
-            if (currentEntry.getData().equals(tData)) {
-                if (currentEntry == head) {
-                    head = currentEntry.getNext();
+    public void addAfter(T object, T afterObject) {
+        Entry<T> objectEnrty = head;
+        while (objectEnrty != null) {
+            if (objectEnrty.data.equals(afterObject)) {
+                if (objectEnrty.next != null) {
+                    Entry<T> tempNext = objectEnrty.next;
+                    objectEnrty.next = new Entry<>(object);
+                    objectEnrty.next.next = tempNext;
+                    break;
                 } else {
-                    assert previousEntry != null;
-                    previousEntry.setNext(currentEntry.getNext());
+                    objectEnrty.next = new Entry<>(object);
+                    break;
                 }
-                return true;
             }
-            previousEntry = currentEntry;
-            currentEntry = currentEntry.getNext();
+            if (objectEnrty.next != null) {
+                objectEnrty = objectEnrty.next;
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+    }
+
+    public boolean remove(Object obj) {
+        T object = (T) obj;
+        Entry<T> objectEntry = head;
+        Entry<T> previousEntry = null;
+        while (objectEntry != null) {
+            if (objectEntry.data.equals(object)) {
+                if (previousEntry != null) {
+                    if (objectEntry.next != null) {
+                        previousEntry.next = objectEntry.next;
+                        return true;
+                    } else {
+                        previousEntry.next = null;
+                        return true;
+                    }
+                } else {
+                    head = objectEntry.next;
+                    return true;
+                }
+            }
+            if (objectEntry.next != null) {
+                previousEntry = objectEntry;
+                objectEntry = objectEntry.next;
+            } else {
+                return false;
+            }
         }
         return false;
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return new LinkedListIterator();
-    }
-
-    @Override
-    public int size() {
-        int count = 0;
-        while (head.hasNext()) {
-            count++;
-        }
-        return count;
     }
 
     public T get(int position) {
         Entry<T> currentEntry = head;
         for (int i = 0; i < position; i++) {
-            if (!currentEntry.hasNext()) throw new IndexOutOfBoundsException();
-            currentEntry = currentEntry.getNext();
+            if (currentEntry.next == null) throw new ArrayIndexOutOfBoundsException();
+            currentEntry = currentEntry.next;
         }
-        return currentEntry.getData();
+        return currentEntry.data;
     }
 
-    public boolean has(T data) {
-        Entry<T> currentEntry = head;
-        while (currentEntry.hasNext() || currentEntry == head) {
-            if (currentEntry.getData().equals(data)) {
+    public boolean has(T object) {
+        Entry<T> objectEntry = head;
+        while (objectEntry != null) {
+            if (objectEntry.data.equals(object)) {
                 return true;
             }
-            currentEntry = currentEntry.getNext();
+            if (objectEntry.next != null) {
+                objectEntry = objectEntry.next;
+            } else {
+                return false;
+            }
         }
         return false;
     }
 
     public void merge(MyLinkedList<T> linkedList) {
-        Entry<T> currentEntry = head;
-        while (currentEntry.hasNext()) {
-            currentEntry = currentEntry.getNext();
+        Entry<T> lastEntry = head;
+        while (lastEntry.next != null) {
+            lastEntry = lastEntry.next;
         }
-        currentEntry.setNext(linkedList.getHead());
+        lastEntry.next = linkedList.head;
     }
 
-    private Entry<T> getHead() {
-        return head;
+    @Override
+    public Iterator<T> iterator() {
+        return new MyLinkedListIterator();
     }
 
-    private class LinkedListIterator implements Iterator<T> {
-        Entry<T> currentEntry;
+    @Override
+    public int size() {
+        return 0;
+    }
 
-        LinkedListIterator() {
+    private class MyLinkedListIterator implements Iterator<T> {
+        private Entry<T> currentEntry;
+
+        public MyLinkedListIterator() {
             currentEntry = head;
         }
 
         @Override
         public boolean hasNext() {
-            return currentEntry.hasNext();
+            return currentEntry != null;
         }
 
         @Override
         public T next() {
-            T data = currentEntry.getData();
-            currentEntry = currentEntry.getNext();
-            return data;
+            Entry<T> returnEntry = currentEntry;
+            currentEntry = currentEntry.next;
+            return returnEntry.data;
+        }
+    }
+
+    private class Entry<T> {
+        private Entry<T> next;
+        private T data;
+
+        public Entry(T data) {
+            this.data = data;
         }
     }
 }

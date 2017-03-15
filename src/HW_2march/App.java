@@ -7,33 +7,22 @@ package HW_2march;
 public class App {
 
     public static void main(String[] args) {
-        MyLinkedList<String> stringMyLinkedList = new MyLinkedList<>();
+        MyLinkedList<String> myLinkedList = new MyLinkedList<>();
+        myLinkedList.add("Gitler");
+        myLinkedList.add("Caput");
+        myLinkedList.add("azazaza");
+        myLinkedList.addAfter("World", "ITIS");
+        myLinkedList.remove("ITIS");
+        System.out.println("Get: " + myLinkedList.get(1));
+        System.out.println("Has: " + myLinkedList.has("Hello"));
+        MyLinkedList<String> myLinkedList1 = new MyLinkedList<>();
+        myLinkedList1.add("New Test");
+        myLinkedList1.add("New ITIS");
+        myLinkedList1.add("New Hello");
+        myLinkedList.merge(myLinkedList1);
 
-        stringMyLinkedList.add("Test");
-        stringMyLinkedList.add("ITIS");
-        stringMyLinkedList.add("Hello");
-
-        stringMyLinkedList.addAfter("World", "Hello");
-        stringMyLinkedList.remove("ITIS");
-
-        for (String astringMyLinkedList : stringMyLinkedList) {
-            System.out.println("iterator: " + astringMyLinkedList);
-        }
-
-        System.out.println("size: " + stringMyLinkedList.size());
-        System.out.println("get(2): " + stringMyLinkedList.get(2));
-        System.out.println("has(\"ITIS\"): " + stringMyLinkedList.has("ITIS"));
-        System.out.println("has(\"None\"): " + stringMyLinkedList.has("None"));
-
-        MyLinkedList<String> mergerMyLinkedList = new MyLinkedList<>();
-        mergerMyLinkedList.add("New");
-        mergerMyLinkedList.add("What happened?");
-        mergerMyLinkedList.add("Java programming");
-
-        stringMyLinkedList.merge(mergerMyLinkedList);
-
-        for (String astringMyLinkedList : stringMyLinkedList) {
-            System.out.println("iterator: " + astringMyLinkedList);
+        for (String aMyLinkedList : myLinkedList) {
+            System.out.println("Iterator: " + aMyLinkedList);
         }
     }
 }
