@@ -69,6 +69,7 @@ public class MySet<T> implements Set<T> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean add(T t) {
+        if (contains(t)) return false;
         T[] newObjects = (T[]) new Object[objects.length + 1];
         System.arraycopy(objects, 0, newObjects, 0, objects.length);
         newObjects[newObjects.length - 1] = t;
