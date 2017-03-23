@@ -17,6 +17,7 @@ public class App {
         }
         System.out.println(Arrays.toString(numbers));
         //System.out.println(Arrays.toString(SelectionSort.sort(numbers)));
-        System.out.println(Arrays.toString(InsertionSort.sort(numbers)));
+        //System.out.println(Arrays.toString(InsertionSort.sort(numbers)));
+        System.out.println(Arrays.toString(MergeSort.sort(numbers)));
     }
 }
