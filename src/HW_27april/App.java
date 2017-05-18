@@ -7,9 +7,9 @@ package HW_27april;
 public class App {
 
     public static void main(String[] args) {
-        BinaryNumber first = new BinaryNumber(true, false, true, false, true); //21
-        BinaryNumber second = new BinaryNumber(true, true, true); //7
+        BinaryNumber first = new BinaryNumber(true, true); //21
+        BinaryNumber second = new BinaryNumber(true, false, true); //7
 
-        System.out.println(first.multiply(second));
+        System.out.println(first.add(second));
     }
 }

@@ -15,7 +15,8 @@ public class BinaryNumber {
         else number = numbers;
     }
 
-    private BinaryNumber add(BinaryNumber anotherNumber) {
+    //manual method
+    public BinaryNumber add(BinaryNumber anotherNumber) {
         boolean[] resultArray = null;
         boolean[] firstArray = null;
         int max = 0;
@@ -51,13 +52,40 @@ public class BinaryNumber {
         return new BinaryNumber(resultArray);
     }
 
+    //java method
+    public BinaryNumber addition(BinaryNumber anotherNumber) {
+        int a = Integer.parseInt(this.toString(), 2);
+        int b = Integer.parseInt(anotherNumber.toString(),2);
+        int z = a + b;
+
+        String result = Integer.toBinaryString(z);
+        boolean[] number = new boolean[result.length()];
+        for (int i = 0; i < result.length(); i++) {
+            number[i] = result.charAt(i) == '1';
+        }
+        return new BinaryNumber(number);
+    }
+
+    public BinaryNumber subtraction(BinaryNumber anotherNumber) {
+        int a = Integer.parseInt(this.toString(), 2);
+        int b = Integer.parseInt(anotherNumber.toString(), 2);
+        int z = a - b;
+
+        String result = Integer.toBinaryString(z);
+        boolean[] number = new boolean[result.length()];
+        for (int i = 0; i < result.length(); i++) {
+            number[i] = result.charAt(i) == '1';
+        }
+        return new BinaryNumber(number);
+    }
+
     public BinaryNumber multiply(BinaryNumber anotherNumber) {
         //Проверка на ноль
         if (anotherNumber.isNull() || this.isNull()) return new BinaryNumber(false);
         if (anotherNumber.isOne()) return this;
         //Проверка на нечетность числа
         if (anotherNumber.number[anotherNumber.length() - 1]) {
-            return this.add((this.multiplyTwo()).multiply(anotherNumber.inHalf()));
+            return this.addition((this.multiplyTwo()).multiply(anotherNumber.inHalf()));
         } else {
             return this.multiplyTwo().multiply(anotherNumber.inHalf());
         }
@@ -94,6 +122,10 @@ public class BinaryNumber {
 
     public int length() {
         return number.length;
+    }
+
+    public boolean[] getNumber() {
+        return number;
     }
 
     @Override
