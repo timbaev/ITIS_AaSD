@@ -70,12 +70,12 @@ public class Treap {
         return new Treap[] {L, R};
     }
 
-    public Treap insert(int x) {
+    public void insert(int x) {
         Treap l = null;
         Treap r = null;
         Treap[] splited = split(x, l, r);
         Treap m = new Treap(x, ThreadLocalRandom.current().nextInt(100));
-        return merge(merge(splited[0], m), splited[1]);
+        merge(merge(splited[0], m), splited[1]);
     }
 
     public Treap remove(int x) {
@@ -87,4 +87,26 @@ public class Treap {
         return merge(splied1[0], splited2[1]);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Treap treap = (Treap) o;
+
+        if (x != treap.x) return false;
+        if (y != treap.y) return false;
+        if (!left.equals(treap.left)) return false;
+        return right.equals(treap.right);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = x;
+        result = 31 * result + y;
+        result = 31 * result + left.hashCode();
+        result = 31 * result + right.hashCode();
+        return result;
+    }
 }
